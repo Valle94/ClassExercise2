@@ -14,6 +14,7 @@ UHealthComponent::UHealthComponent()
 	MaxHealth = 100;
 	CurrentHealth = MaxHealth;
 	TimeSinceLastHeal = 0.f;
+	RegenAmount = 1;
 }
 
 
@@ -33,11 +34,7 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	TimeSinceLastHeal += DeltaTime;
 
-	if (TimeSinceLastHeal >= 0.5f and !IsDead())
-	{
-		Heal(5);
-		TimeSinceLastHeal = 0.f;
-	}
+	Regen(RegenAmount);
 }
 
 void UHealthComponent::ApplyDamage(int damage)
@@ -48,6 +45,7 @@ void UHealthComponent::ApplyDamage(int damage)
 	}
 
 	CurrentHealth = FMath::Max(0, CurrentHealth - damage);
+	UE_LOG(LogTemp, Display, TEXT("Player took %d damage!"), damage);
 	UE_LOG(LogTemp, Display, TEXT("Current Health: %d"), CurrentHealth);
 	UE_LOG(LogTemp, Display, TEXT("%d"), IsDead());
 }
@@ -60,8 +58,18 @@ void UHealthComponent::Heal(int heal)
 	}
 
 	CurrentHealth = FMath::Min(MaxHealth, CurrentHealth + heal);
+	UE_LOG(LogTemp, Display, TEXT("Player healed %d hitpoints!"), heal);
 	UE_LOG(LogTemp, Display, TEXT("Current Health: %d"), CurrentHealth);
 	UE_LOG(LogTemp, Display, TEXT("%d"), IsDead());
+}
+
+void UHealthComponent::Regen(int regen)
+{
+	if (TimeSinceLastHeal >= 0.5f and !IsDead() and (CurrentHealth < MaxHealth))
+	{
+		Heal(regen);
+		TimeSinceLastHeal = 0.f;
+	}
 }
 
 bool UHealthComponent::IsDead() const

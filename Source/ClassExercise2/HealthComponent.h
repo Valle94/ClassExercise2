@@ -24,6 +24,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int CurrentHealth;
 
+	// Value for Regen Amount
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int RegenAmount;
+
 	// Value for Regen Timer
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float TimeSinceLastHeal;
@@ -35,6 +39,10 @@ public:
 	// Function to restore health by adding healing
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void Heal(int heal);
+
+	// Function to restore health by constantly (regen)
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void Regen(int regen);
 
 	// Function to determine if alive or dead
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Health")
